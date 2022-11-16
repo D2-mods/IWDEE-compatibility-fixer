@@ -1,0 +1,148 @@
+/*
+for Tome & Blood Innate Metamagic
+- fixes level gained for some abilities
+- gives bards in IWDEE sequencer and trigger abilities
+*/
+
+
+//Edit base mage/sorc 2da
+COPY_EXISTING ~CLABMA01.2da~  ~override~
+  LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
+  REPLACE_TEXTUALLY ~AP_D5ADSQ1M~ ~****~
+  REPLACE_TEXTUALLY ~AP_D5ADCNTM~ ~****~
+  REPLACE_TEXTUALLY ~AP_D5ADSQ2M~ ~****~
+  REPLACE_TEXTUALLY ~AP_D5ADSQ3M~ ~****~
+  LPF d2_kit_ability_adder INT_VAR level=7  passive=1 STR_VAR resource=~D5ADSQ1M~ END    // minor
+  LPF d2_kit_ability_adder INT_VAR level=12 passive=1 STR_VAR resource=~D5ADCNTM~ END    // contingency
+  LPF d2_kit_ability_adder INT_VAR level=14 passive=1 STR_VAR resource=~D5ADSQ2M~ END    // sequencer
+  LPF d2_kit_ability_adder INT_VAR level=16 passive=1 STR_VAR resource=~D5ADSQ3M~ END    // trigger
+
+  PATCH_IF (MOD_IS_INSTALLED ~TomeAndBlood.tp2~ 51) BEGIN    // if Sorcerers get abilities
+    REPLACE_TEXTUALLY ~AP_D5ADSQ1S~ ~****~
+    REPLACE_TEXTUALLY ~AP_D5ADCNTS~ ~****~
+    REPLACE_TEXTUALLY ~AP_D5ADSQ2S~ ~****~
+    REPLACE_TEXTUALLY ~AP_D5ADSQ3S~ ~****~
+    LPF d2_kit_ability_adder INT_VAR level=8  passive=1 STR_VAR resource=~D5ADSQ1S~ END
+    LPF d2_kit_ability_adder INT_VAR level=12 passive=1 STR_VAR resource=~D5ADCNTS~ END
+    LPF d2_kit_ability_adder INT_VAR level=14 passive=1 STR_VAR resource=~D5ADSQ2S~ END
+    LPF d2_kit_ability_adder INT_VAR level=16 passive=1 STR_VAR resource=~D5ADSQ3S~ END
+  END
+
+  PATCH_IF (GAME_IS ~iwdee~) BEGIN
+    REPLACE_TEXTUALLY ~GA_SPWI908~ ~****~
+    LPF d2_kit_ability_adder INT_VAR level=18 STR_VAR resource=~SPWI908~ END    // Chain Contingency for IWDEE
+  END
+BUT_ONLY
+
+
+//Edit Bard 2da (IWDEE only)
+ACTION_IF (GAME_IS ~iwdee~) BEGIN
+  COPY_EXISTING ~CLABBA01.2da~  ~override~
+    LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
+    REPLACE_TEXTUALLY ~AP_D5ADSQ1B~ ~****~
+    REPLACE_TEXTUALLY ~AP_D5ADCNTB~ ~****~
+    LPF d2_kit_ability_adder INT_VAR level=10 passive=1 STR_VAR resource=~D5ADSQ1B~ END
+    LPF d2_kit_ability_adder INT_VAR level=16 passive=1 STR_VAR resource=~D5ADCNTB~ END
+    LPF d2_kit_ability_adder INT_VAR level=21 STR_VAR resource=~d5_seq2~ END    // sequencer
+    LPF d2_kit_ability_adder INT_VAR level=29 STR_VAR resource=~d5_seq3~ END    // trigger
+  BUT_ONLY UNLESS ~GA_d5_seq2~
+END
+
+
+//Kit 2das
+COPY_EXISTING - ~kitlist.2da~  ~~
+  COUNT_2DA_ROWS 10 rows
+  READ_2DA_ENTRIES_NOW ~kitlist_table~ 10    // row 0 is the "RESERVE" row
+  FOR (r = 1; r < rows; ++r) BEGIN
+    READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
+    PATCH_IF (baseclass = 1) BEGIN    // if Mage
+      READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
+      INNER_ACTION BEGIN
+        ACTION_IF !(~%clab%~ STRING_EQUAL_CASE ~CLABMA01~) BEGIN    // not if base Mage/Sorc clab
+          ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
+            COPY_EXISTING ~%clab%.2da~  ~override~
+              LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
+              REPLACE_TEXTUALLY ~AP_D5ADSQ1M~ ~****~
+              REPLACE_TEXTUALLY ~AP_D5ADCNTM~ ~****~
+              REPLACE_TEXTUALLY ~AP_D5ADSQ2M~ ~****~
+              REPLACE_TEXTUALLY ~AP_D5ADSQ3M~ ~****~
+              LPF d2_kit_ability_adder INT_VAR level=7  passive=1 STR_VAR resource=~D5ADSQ1M~ END    // minor
+              LPF d2_kit_ability_adder INT_VAR level=12 passive=1 STR_VAR resource=~D5ADCNTM~ END    // contingency
+              LPF d2_kit_ability_adder INT_VAR level=14 passive=1 STR_VAR resource=~D5ADSQ2M~ END    // sequencer
+              LPF d2_kit_ability_adder INT_VAR level=16 passive=1 STR_VAR resource=~D5ADSQ3M~ END    // trigger
+
+              PATCH_IF (GAME_IS ~iwdee~) BEGIN
+                REPLACE_TEXTUALLY ~GA_SPWI908~ ~****~
+                LPF d2_kit_ability_adder INT_VAR level=18 STR_VAR resource=~SPWI908~ END    // Chain Contingency for IWDEE
+              END
+            BUT_ONLY
+          END
+        END
+      END
+    END
+    PATCH_IF (MOD_IS_INSTALLED ~TomeAndBlood.tp2~ 51) BEGIN    // if Sorcerers get abilities
+      PATCH_IF (baseclass = 19) BEGIN
+        READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
+        INNER_ACTION BEGIN
+          ACTION_IF !(~%clab%~ STRING_EQUAL_CASE ~CLABMA01~) BEGIN    // not if base Mage/Sorc clab
+            ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
+              COPY_EXISTING ~%clab%.2da~  ~override~
+                LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
+                REPLACE_TEXTUALLY ~AP_D5ADSQ1S~ ~****~
+                REPLACE_TEXTUALLY ~AP_D5ADCNTS~ ~****~
+                REPLACE_TEXTUALLY ~AP_D5ADSQ2S~ ~****~
+                REPLACE_TEXTUALLY ~AP_D5ADSQ3S~ ~****~
+                LPF d2_kit_ability_adder INT_VAR level=8  passive=1 STR_VAR resource=~D5ADSQ1S~ END    // minor
+                LPF d2_kit_ability_adder INT_VAR level=12 passive=1 STR_VAR resource=~D5ADCNTS~ END    // contingency
+                LPF d2_kit_ability_adder INT_VAR level=14 passive=1 STR_VAR resource=~D5ADSQ2S~ END    // sequencer
+                LPF d2_kit_ability_adder INT_VAR level=16 passive=1 STR_VAR resource=~D5ADSQ3S~ END    // trigger
+
+                PATCH_IF (GAME_IS ~iwdee~) BEGIN
+                  REPLACE_TEXTUALLY ~GA_SPWI908~ ~****~
+                  LPF d2_kit_ability_adder INT_VAR level=18 STR_VAR resource=~SPWI908~ END    // Chain Contingency for IWDEE
+                END
+              BUT_ONLY
+            END
+          END
+        END
+      END
+    END
+    PATCH_IF (GAME_IS ~iwdee~) BEGIN    // for Bards in IWDEE
+      PATCH_IF (baseclass = 5) BEGIN
+        READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
+        INNER_ACTION BEGIN
+          ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
+            COPY_EXISTING ~%clab%.2da~  ~override~
+              LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
+              REPLACE_TEXTUALLY ~AP_D5ADSQ1B~ ~****~
+              REPLACE_TEXTUALLY ~AP_D5ADCNTB~ ~****~
+              LPF d2_kit_ability_adder INT_VAR level=10 passive=1 STR_VAR resource=~D5ADSQ1B~ END
+              LPF d2_kit_ability_adder INT_VAR level=16 passive=1 STR_VAR resource=~D5ADCNTB~ END
+              LPF d2_kit_ability_adder INT_VAR level=21 STR_VAR resource=~d5_seq2~ END    // sequencer
+              LPF d2_kit_ability_adder INT_VAR level=29 STR_VAR resource=~d5_seq3~ END    // trigger
+            BUT_ONLY UNLESS ~GA_d5_seq2~
+          END
+        END
+      END
+    END
+  END
+
+
+
+/*Removed (seems to be intended behavior by subtledoctor)
+//Fix sequencers being removed permanently
+
+/*
+This bug happens if no sequencer was created because:
+	1. casting was interrupted
+	2. opened spell selection, but canceled out
+*/
+
+ACTION_FOR_EACH spell IN ~d5_seq1~ ~d5_seq2~ ~d5_seq3~ BEGIN
+  ACTION_IF (FILE_EXISTS ~override/%spell%.spl~) BEGIN
+    COPY_EXISTING ~%spell%.spl~  ~override~
+      LPF DELETE_EFFECT INT_VAR match_opcode=172 END
+    BUT_ONLY
+  END
+END
+*/

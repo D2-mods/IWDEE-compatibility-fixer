@@ -1,20 +1,19 @@
-# IWDEE compatibility fixer
+IWDEE compatibility fixer (for kit mods and TnB innate metamagic)
 
 
 If you've played IWDEE with mod kits, you may have noticed many kits aren't actually compatible with IWDEE, even if they say they are. Kits will generally work, but they'll be missing IWDEE abilities, or in the case of druids or paladins, have completely wrong abilities.
 
 I decided to do something about it (a long time ago, but only getting it done now). There's also a component for Tome & Blood's Innate Metamagic (options 1 and 2). More details below.
 
-**Components:**
+Components:
 1. Kit mods
 2. TnB Innate Metamagic
 
----
+
 
 Additional info (Kit mods):
--
 
-> NOTE: If the Artisan's Kitpack (v3.0) Paladin Overhaul is detected, no changes will be made to Detect Evil or Protection From Evil. The reason is the BG2 Detect Evil and the IWD Protection from Evil use the same filename (SPCL212.spl). Artisan's Kitpack changes the IWD file into (a revised version of) the BG2 Detect Evil.
+NOTE: If the Artisan's Kitpack (v3.0) Paladin Overhaul is detected, no changes will be made to Detect Evil or Protection From Evil. The reason is the BG2 Detect Evil and the IWD Protection from Evil use the same filename (SPCL212.spl). Artisan's Kitpack changes the IWD file into (a revised version of) the BG2 Detect Evil.
 
 Paladins:
 - Gains IWD Detect/Protection From Evil (and removes BG2 versions if detected)
@@ -39,7 +38,6 @@ Druid
 
 
 Innate Metamagic (tested with Tome & Blood v0.9.4)
--
 
 - The following issues are in IWDEE:
 	- Chain Contingency is unobtainable (changed to an HLA, but game has no HLAs)
@@ -52,3 +50,4 @@ Innate Metamagic (tested with Tome & Blood v0.9.4)
 	- All abilities are gained at the same level that the spell level is gained (unmodded spell progression)
 
 - Can also be installed for the BGEE games. Will only adjust the level discrepancies.
+

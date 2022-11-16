@@ -1,0 +1,47 @@
+BACKUP ~weidu_external/backup/iwd_compat~
+AUTHOR ~~
+VERSION ~0.1~
+
+ALWAYS
+  ACTION_BASH_FOR ~%MOD_FOLDER%/lib~ ~.*\.tpa~ BEGIN    // function list
+    INCLUDE ~%BASH_FOR_FILESPEC%~
+  END
+
+  OUTER_TEXT_SPRINT install  ~%MOD_FOLDER%/install~
+END
+
+LANGUAGE ~English~
+         ~english~
+         ~iwd_compat/tra/english/setup.tra~
+
+
+/*
+Compatibility fixes for mod kits (IWDEE)
+*/
+
+BEGIN @10
+DESIGNATED 10
+REQUIRE_PREDICATE (GAME_IS ~iwdee~) ~Game not supported~
+LABEL ~D2_IWDEE_KITCOMPAT~
+INCLUDE ~%MOD_FOLDER%/install/iwdkitcompat.tph~
+
+
+/*
+IWDEE compatibility for TnB Innate Metamagic (tested on v0.9.40)
+*/
+
+BEGIN @20
+DESIGNATED 20
+REQUIRE_PREDICATE (GAME_IS ~bgee bg2ee iwdee eet~) ~Game not supported~
+REQUIRE_PREDICATE ((MOD_IS_INSTALLED ~TomeAndBlood.tp2~ 51) OR 
+                   (MOD_IS_INSTALLED ~TomeAndBlood.tp2~ 52)) ~~
+LABEL ~D2-IWDEE-TNBSEQFIX~
+INCLUDE ~%MOD_FOLDER%/install/tnbseqfix.tph~
+
+
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+/*
+*/

@@ -1,0 +1,174 @@
+/*
+Give mod kits correct abilities for IWDEE
+*/
+
+
+//Check base classes (fix if abilities missing)
+INCLUDE ~%install%/iwdbaseclass.tph~
+
+
+//Make array of kitlist.2da
+COPY_EXISTING - ~kitlist.2da~  ~~
+  COUNT_2DA_ROWS 10 rows
+  READ_2DA_ENTRIES_NOW ~kitlist_table~ 10    // row 0 is the "RESERVE" row
+
+
+//Paladin: check all abilities
+  FOR (r = 1; r < rows; ++r) BEGIN
+    READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
+    PATCH_IF (baseclass = 6) BEGIN    // if Paladin
+      READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
+      PATCH_IF !(~%clab%~ STRING_EQUAL_CASE ~CLABPA06~) BEGIN    // skip if Blackguard
+        INNER_ACTION BEGIN
+          ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
+            COPY_EXISTING ~%clab%.2da~  ~override~
+              COUNT_REGEXP_INSTANCES ~GA_SPCL211~   layonhands    // check IWD abilities
+              COUNT_REGEXP_INSTANCES ~AP_#PALDISE~  paldise
+              COUNT_REGEXP_INSTANCES ~AP_#PALFEAR~  palfear
+              COUNT_REGEXP_INSTANCES ~GA_SPCL111~   curedisease
+
+              PATCH_IF (paldise = 0) BEGIN
+                LPF d2_kit_ability_adder INT_VAR passive=1 STR_VAR resource=~#PALDISE~ END
+              END
+              PATCH_IF (palfear = 0) BEGIN
+                LPF d2_kit_ability_adder INT_VAR passive=1 STR_VAR resource=~#PALFEAR~ END
+              END
+              PATCH_IF (curedisease = 0) BEGIN
+                PATCH_IF (layonhands > 0) BEGIN
+                  LPF d2_kit_ability_adder STR_VAR resource=~SPCL111~ END
+                END
+              END
+
+              // check Detect/Protect from Evil, but skip if Paladin Overhaul (Artisan's Kitpack)
+              PATCH_IF !(FILE_EXISTS ~override/c0pal01.SPL~) BEGIN
+                COUNT_REGEXP_INSTANCES ~GA_SPCL213~  bg2protect
+                COUNT_REGEXP_INSTANCES ~GA_SPCL212~  bg2detect
+                PATCH_IF (bg2protect > 1) BEGIN
+                  REPLACE_TEXTUALLY ~GA_SPCL213~ ~****~
+                END
+                PATCH_IF (bg2detect > 1) BEGIN
+                  REPLACE_TEXTUALLY ~GA_SPCL212~ ~****~
+                END
+
+                COUNT_REGEXP_INSTANCES ~GA_SPCL212~   iwdprotect
+                COUNT_REGEXP_INSTANCES ~GA_SPCL109~   iwddetect
+                PATCH_IF (iwdprotect = 0) BEGIN
+                  LPF d2_kit_ability_adder STR_VAR resource=~SPCL212~ END
+                END
+                PATCH_IF (iwddetect = 0) BEGIN
+                  LPF d2_kit_ability_adder STR_VAR resource=~SPCL109~ END
+                END
+              END
+            BUT_ONLY
+          END
+        END
+      END
+    END
+  END
+
+
+//Ranger: Tracking
+  FOR (r = 1; r < rows; ++r) BEGIN
+    READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
+    PATCH_IF ((baseclass = 12) OR        // if Ranger
+              (baseclass = 18)) BEGIN    // if C/R
+      READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
+      INNER_ACTION BEGIN
+        ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
+          COPY_EXISTING ~%clab%.2da~  ~override~
+            COUNT_REGEXP_INSTANCES ~GA_SPCL922~  tracking
+            PATCH_IF (tracking > 1) BEGIN
+              REPLACE_TEXTUALLY ~GA_SPCL922~ ~****~
+            END
+
+            COUNT_REGEXP_INSTANCES ~GA_SPCL922~  tracking
+            PATCH_IF (tracking = 0) BEGIN
+              LPF d2_kit_ability_adder STR_VAR resource=~SPCL922~ END
+            END
+          BUT_ONLY
+        END
+      END
+    END
+  END
+
+
+//Thief: Evasion
+  FOR (r = 1; r < rows; ++r) BEGIN
+    READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
+    PATCH_IF ((baseclass = 4) OR         // if Thief
+              (baseclass = 9) OR         // if F/T
+              (baseclass = 10) OR        // if F/M/T
+              (baseclass = 13) OR        // if M/T
+              (baseclass = 15)) BEGIN    // if C/T
+      READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
+      INNER_ACTION BEGIN
+        ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
+          COPY_EXISTING ~%clab%.2da~  ~override~
+            COUNT_REGEXP_INSTANCES ~AP_#EVASION~  evasion
+            PATCH_IF (evasion > 1) BEGIN
+              REPLACE_TEXTUALLY ~AP_#EVASION~ ~****~
+            END
+
+            COUNT_REGEXP_INSTANCES ~AP_#EVASION~  evasion
+            PATCH_IF (evasion = 0) BEGIN
+              LPF d2_kit_ability_adder INT_VAR level=7 passive=1 STR_VAR resource=~#EVASION~ END
+            END
+          BUT_ONLY
+        END
+      END
+    END
+  END
+
+
+//Druid: poison immunity, timeless body, shapeshifts (if BG2 shapeshifts detected)
+  FOR (r = 1; r < rows; ++r) BEGIN
+    READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
+    PATCH_IF ((baseclass = 11) OR        // if Druid
+              (baseclass = 16)) BEGIN    // if F/D
+      READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
+      INNER_ACTION BEGIN
+        ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
+          COPY_EXISTING ~%clab%.2da~  ~override~
+            COUNT_REGEXP_INSTANCES ~AP_SPCL939~  timeless
+            COUNT_REGEXP_INSTANCES ~AP_SPCL925~  bg2resists
+            COUNT_REGEXP_INSTANCES ~GA_SPCL611~  bg2shapeshifts
+
+            PATCH_IF (timeless = 0) BEGIN
+              LPF d2_kit_ability_adder INT_VAR level=15 passive=1 STR_VAR resource=~SPCL939~ END
+            END
+
+            PATCH_IF (bg2resists > 0) BEGIN
+              REPLACE_TEXTUALLY ~AP_SPCL924~ ~****~
+              REPLACE_TEXTUALLY ~AP_SPCL925~ ~****~
+              REPLACE_TEXTUALLY ~AP_SPCL926~ ~****~
+              REPLACE_TEXTUALLY ~AP_SPCL927~ ~****~
+              LPF d2_kit_ability_adder INT_VAR level=9 passive=1 STR_VAR resource=~SPCL924~ END
+            END
+
+            PATCH_IF (bg2shapeshifts > 0) BEGIN
+              REPLACE_TEXTUALLY ~GA_SPCL611~ ~****~
+              REPLACE_TEXTUALLY ~GA_SPCL612~ ~****~
+              REPLACE_TEXTUALLY ~GA_SPCL613~ ~****~
+              REPLACE_TEXTUALLY ~GA_SPCL107~ ~****~
+              REPLACE_TEXTUALLY ~GA_SPCL108~ ~****~
+              REPLACE_TEXTUALLY ~GA_SPCL101~ ~****~
+              REPLACE_TEXTUALLY ~GA_SPCL112~ ~****~
+              REPLACE_TEXTUALLY ~GA_SPCL113~ ~****~
+              REPLACE_TEXTUALLY ~GA_SPCL114~ ~****~
+              LPF d2_kit_ability_adder INT_VAR level=5 STR_VAR resource=~SPCL107~ END
+              LPF d2_kit_ability_adder INT_VAR level=7 STR_VAR resource=~SPCL108~ END
+              LPF d2_kit_ability_adder INT_VAR level=9 STR_VAR resource=~SPCL101~ END
+              LPF d2_kit_ability_adder INT_VAR level=11 STR_VAR resource=~SPCL112~ END
+              LPF d2_kit_ability_adder INT_VAR level=13 STR_VAR resource=~SPCL113~ END
+              LPF d2_kit_ability_adder INT_VAR level=15 STR_VAR resource=~SPCL114~ END
+            END
+          BUT_ONLY
+        END
+      END
+    END
+  END
+
+
+
+/*
+*/
