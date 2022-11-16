@@ -14,7 +14,7 @@ I decided to do something about it (a long time ago, but only getting it done no
 Additional info (Kit mods):
 -
 
-> NOTE: If the Artisan's Kitpack (v3.0) Paladin Overhaul is detected, no changes will be made to Detect Evil or Protection From Evil. The reason is the BG2 Detect Evil and the IWD Protection from Evil use the same filename (SPCL212.spl). Artisan's Kitpack changes the IWD file into (a revised version of) the BG2 Detect Evil.
+> NOTE: If the Artisan's Kitpack (v3.0) Paladin Overhaul is detected, no changes will be made to Detect Evil or Protection From Evil. The reason is the BG2 Detect Evil and the IWD Protection from Evil use the same filename (SPCL212.spl). Artisan's Kitpack changes the IWD file into Detect Evil and uses the BG2 filename for Protection From Evil (SPCL213.spl).
 
 Paladins:
 - Gains IWD Detect/Protection From Evil (and removes BG2 versions if detected)
