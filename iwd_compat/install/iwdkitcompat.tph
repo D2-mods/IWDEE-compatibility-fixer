@@ -1,5 +1,7 @@
 /*
 Give mod kits correct abilities for IWDEE
+- also checks multiclass kit tables, but this is just for appearances
+- multiclass kits use the base class table (and add abilities to QD_MC files)
 */
 
 
@@ -96,10 +98,10 @@ COPY_EXISTING - ~kitlist.2da~  ~~
   FOR (r = 1; r < rows; ++r) BEGIN
     READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
     PATCH_IF ((baseclass = 4) OR         // if Thief
-              (baseclass = 9) OR         // F/T (just for aesthetics, true multiclasses will use the Thief table)
-              (baseclass = 10) OR        // F/M/T
-              (baseclass = 13) OR        // M/T
-              (baseclass = 15)) BEGIN    // C/T
+              (baseclass = 9) OR         // if F/T
+              (baseclass = 10) OR        // if F/M/T
+              (baseclass = 13) OR        // if M/T
+              (baseclass = 15)) BEGIN    // if C/T
       READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
       INNER_ACTION BEGIN
         ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
@@ -132,6 +134,7 @@ COPY_EXISTING - ~kitlist.2da~  ~~
             COUNT_REGEXP_INSTANCES ~AP_SPCL939~  timeless
             COUNT_REGEXP_INSTANCES ~AP_SPCL925~  bg2resists
             COUNT_REGEXP_INSTANCES ~GA_SPCL611~  bg2shapeshifts
+            COUNT_REGEXP_INSTANCES ~AP_SPCL924~  haspoisonresist
 
             PATCH_IF (timeless = 0) BEGIN
               LPF d2_kit_ability_adder INT_VAR level=15 passive=1 STR_VAR resource=~SPCL939~ END
@@ -145,8 +148,10 @@ COPY_EXISTING - ~kitlist.2da~  ~~
             END
 
             COUNT_REGEXP_INSTANCES ~AP_SPCL924~  poisonresist
-            PATCH_IF (poisonresist = 0) BEGIN
-              LPF d2_kit_ability_adder INT_VAR level=9 passive=1 STR_VAR resource=~SPCL924~ END
+            PATCH_IF (haspoisonresist > 0) BEGIN
+              PATCH_IF (poisonresist = 0) BEGIN
+                LPF d2_kit_ability_adder INT_VAR level=9 passive=1 STR_VAR resource=~SPCL924~ END
+              END
             END
 
             PATCH_IF (bg2shapeshifts > 0) BEGIN

@@ -1,7 +1,8 @@
 /*
 for Tome & Blood Innate Metamagic
-- fixes level gained for some abilities
-- gives bards in IWDEE sequencer and trigger abilities
+- IWDEE: Mages and Sorcerers gain Chain Contingency at level 18.
+- IWDEE: Bards gain Spell Sequencer at level 21 and Spell Trigger at level 29.
+- All abilities are gained at the same level that the spell level is gained (unmodded spell progression)
 */
 
 
@@ -55,12 +56,7 @@ COPY_EXISTING - ~kitlist.2da~  ~~
   READ_2DA_ENTRIES_NOW ~kitlist_table~ 10    // row 0 is the "RESERVE" row
   FOR (r = 1; r < rows; ++r) BEGIN
     READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
-    PATCH_IF ((baseclass = 1) OR         // if Mage
-              (baseclass = 7) OR         // F/M (just for aesthetics, true multiclasses will use the Mage table)
-              (baseclass = 10) OR        // F/M/T
-              (baseclass = 13) OR        // M/T
-              (baseclass = 14) OR        // M/C
-              (baseclass = 17)) BEGIN    // F/M/C
+    PATCH_IF (baseclass = 1) BEGIN    // if Mage
       READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
       INNER_ACTION BEGIN
         ACTION_IF !(~%clab%~ STRING_EQUAL_CASE ~CLABMA01~) BEGIN    // not if base Mage/Sorc clab
