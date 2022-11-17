@@ -42,7 +42,6 @@ COPY_EXISTING ~CLABPA01.2DA~  ~override~
 BUT_ONLY UNLESS ~AP_C0PAL01~    // not if revised Paladin (Artisan's Kitpack)
 
 
-
 //Ranger: Tracking
 COPY_EXISTING ~CLABRN01.2DA~  ~override~
   COUNT_REGEXP_INSTANCES ~GA_SPCL922~  tracking
@@ -86,6 +85,10 @@ COPY_EXISTING ~CLABDR01.2DA~  ~override~
     REPLACE_TEXTUALLY ~AP_SPCL925~ ~****~
     REPLACE_TEXTUALLY ~AP_SPCL926~ ~****~
     REPLACE_TEXTUALLY ~AP_SPCL927~ ~****~
+  END
+
+  COUNT_REGEXP_INSTANCES ~AP_SPCL924~  poisonresist
+  PATCH_IF (poisonresist = 0) BEGIN
     LPF d2_kit_ability_adder INT_VAR level=9 passive=1 STR_VAR resource=~SPCL924~ END
   END
 
@@ -107,6 +110,7 @@ COPY_EXISTING ~CLABDR01.2DA~  ~override~
     LPF d2_kit_ability_adder INT_VAR level=15 STR_VAR resource=~SPCL114~ END
   END
 BUT_ONLY
+
 
 
 /*

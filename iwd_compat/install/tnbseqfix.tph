@@ -55,7 +55,12 @@ COPY_EXISTING - ~kitlist.2da~  ~~
   READ_2DA_ENTRIES_NOW ~kitlist_table~ 10    // row 0 is the "RESERVE" row
   FOR (r = 1; r < rows; ++r) BEGIN
     READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
-    PATCH_IF (baseclass = 1) BEGIN    // if Mage
+    PATCH_IF ((baseclass = 1) OR         // if Mage
+              (baseclass = 7) OR         // F/M (just for aesthetics, true multiclasses will use the Mage table)
+              (baseclass = 10) OR        // F/M/T
+              (baseclass = 13) OR        // M/T
+              (baseclass = 14) OR        // M/C
+              (baseclass = 17)) BEGIN    // F/M/C
       READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
       INNER_ACTION BEGIN
         ACTION_IF !(~%clab%~ STRING_EQUAL_CASE ~CLABMA01~) BEGIN    // not if base Mage/Sorc clab

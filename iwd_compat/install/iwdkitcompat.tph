@@ -96,10 +96,10 @@ COPY_EXISTING - ~kitlist.2da~  ~~
   FOR (r = 1; r < rows; ++r) BEGIN
     READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
     PATCH_IF ((baseclass = 4) OR         // if Thief
-              (baseclass = 9) OR         // if F/T
-              (baseclass = 10) OR        // if F/M/T
-              (baseclass = 13) OR        // if M/T
-              (baseclass = 15)) BEGIN    // if C/T
+              (baseclass = 9) OR         // F/T (just for aesthetics, true multiclasses will use the Thief table)
+              (baseclass = 10) OR        // F/M/T
+              (baseclass = 13) OR        // M/T
+              (baseclass = 15)) BEGIN    // C/T
       READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
       INNER_ACTION BEGIN
         ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
@@ -142,6 +142,10 @@ COPY_EXISTING - ~kitlist.2da~  ~~
               REPLACE_TEXTUALLY ~AP_SPCL925~ ~****~
               REPLACE_TEXTUALLY ~AP_SPCL926~ ~****~
               REPLACE_TEXTUALLY ~AP_SPCL927~ ~****~
+            END
+
+            COUNT_REGEXP_INSTANCES ~AP_SPCL924~  poisonresist
+            PATCH_IF (poisonresist = 0) BEGIN
               LPF d2_kit_ability_adder INT_VAR level=9 passive=1 STR_VAR resource=~SPCL924~ END
             END
 

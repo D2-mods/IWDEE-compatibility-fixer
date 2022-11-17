@@ -1,6 +1,6 @@
 BACKUP ~weidu_external/backup/iwd_compat~
 AUTHOR ~~
-VERSION ~0.1~
+VERSION ~0.2~
 
 ALWAYS
   ACTION_BASH_FOR ~%MOD_FOLDER%/lib~ ~.*\.tpa~ BEGIN    // function list
@@ -27,7 +27,7 @@ INCLUDE ~%MOD_FOLDER%/install/iwdkitcompat.tph~
 
 
 /*
-IWDEE compatibility for TnB Innate Metamagic (tested on v0.9.40)
+IWDEE compatibility for TnB Innate Metamagic (tested on v0.9.42)
 */
 
 BEGIN @20
