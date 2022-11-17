@@ -41,6 +41,8 @@ Druid
 Innate Metamagic (tested with Tome & Blood v0.9.4)
 -
 
+Note: According to subtledoctor, the level discrepancies from the Innate Metamagic component are intended. I personally prefer the abilities to be gained at the same time as the spell level, so I'm keeping this component. Also, Chain Contingency will be added to IWDEE in a future TnB update, so I'll look into that when it happens to make sure there aren't any issues.
+
 - The following issues are in IWDEE:
 	- Chain Contingency is unobtainable (changed to an HLA, but game has no HLAs)
 	- Bards don't get Spell Sequencer/Trigger, even though they get level 7 and 8 spells
