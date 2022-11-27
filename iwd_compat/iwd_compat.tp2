@@ -1,6 +1,6 @@
 BACKUP ~weidu_external/backup/iwd_compat~
 AUTHOR ~~
-VERSION ~0.4~
+VERSION ~0.5~
 
 ALWAYS
   ACTION_BASH_FOR ~%MOD_FOLDER%/lib~ ~.*\.tpa~ BEGIN    // function list

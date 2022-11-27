@@ -5,7 +5,6 @@ for Tome & Blood Innate Metamagic
 
 //Edit base mage/sorc 2da
 COPY_EXISTING ~CLABMA01.2da~  ~override~
-  LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
   REPLACE_TEXTUALLY ~AP_D5ADSQ1M~ ~****~
   REPLACE_TEXTUALLY ~AP_D5ADCNTM~ ~****~
   REPLACE_TEXTUALLY ~AP_D5ADSQ2M~ ~****~
@@ -36,7 +35,6 @@ BUT_ONLY
 //Edit Bard 2da (IWDEE only)
 ACTION_IF (GAME_IS ~iwdee~) BEGIN
   COPY_EXISTING ~CLABBA01.2da~  ~override~
-    LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
     REPLACE_TEXTUALLY ~AP_D5ADSQ1B~ ~****~
     REPLACE_TEXTUALLY ~AP_D5ADCNTB~ ~****~
     LPF d2_kit_ability_adder INT_VAR level=10 passive=1 STR_VAR resource=~D5ADSQ1B~ END
@@ -60,7 +58,6 @@ COPY_EXISTING - ~kitlist.2da~  ~~
           ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
             COPY_EXISTING ~%clab%.2da~  ~override~
               LPF 2DA_MISSING_COLS END
-              LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
               REPLACE_TEXTUALLY ~AP_D5ADSQ1M~ ~****~
               REPLACE_TEXTUALLY ~AP_D5ADCNTM~ ~****~
               REPLACE_TEXTUALLY ~AP_D5ADSQ2M~ ~****~
@@ -87,7 +84,6 @@ COPY_EXISTING - ~kitlist.2da~  ~~
             ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
               COPY_EXISTING ~%clab%.2da~  ~override~
                 LPF 2DA_MISSING_COLS END
-                LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
                 REPLACE_TEXTUALLY ~AP_D5ADSQ1S~ ~****~
                 REPLACE_TEXTUALLY ~AP_D5ADCNTS~ ~****~
                 REPLACE_TEXTUALLY ~AP_D5ADSQ2S~ ~****~
@@ -114,7 +110,6 @@ COPY_EXISTING - ~kitlist.2da~  ~~
           ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
             COPY_EXISTING ~%clab%.2da~  ~override~
               LPF 2DA_MISSING_COLS END
-              LPF 2da_find_row_delete STR_VAR row_name = ~METAMAGIC~ END
               REPLACE_TEXTUALLY ~AP_D5ADSQ1B~ ~****~
               REPLACE_TEXTUALLY ~AP_D5ADCNTB~ ~****~
               LPF d2_kit_ability_adder INT_VAR level=10 passive=1 STR_VAR resource=~D5ADSQ1B~ END

@@ -1,6 +1,6 @@
 //Setup
-@10 = ~Mod kits~
-@20 = ~Innate Metamagic (Tome & Blood)~
+@10 = ~iwd_compat for mod kits~
+@20 = ~iwd_compat for TnB Innate Metamagic~
 @30 = ~~
 @40 = ~~
 @50 = ~~

@@ -38,7 +38,7 @@ Druid
 
 
 
-Innate Metamagic (tested with Tome & Blood v0.9.42)
+Innate Metamagic (Tome & Blood)
 -
 
 Note: According to subtledoctor, the level discrepancies from the Innate Metamagic component are intended. I personally prefer the abilities to be gained at the same time as the spell level, so I'm keeping this component.
