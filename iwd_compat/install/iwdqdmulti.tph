@@ -1,0 +1,34 @@
+/*
+Check QDMULTI files for BG shapeshifts and resists
+*/
+
+
+//BG shapeshifts (level 7 only)
+ACTION_IF (FILE_EXISTS ~override/QD_MCD07.SPL~) BEGIN
+  COPY_EXISTING ~QD_MCD07.SPL~  ~override~
+    LPF DELETE_EFFECT STR_VAR resource=~SPCL611#~ END
+    LPF DELETE_EFFECT STR_VAR resource=~SPCL612#~ END
+    LPF DELETE_EFFECT STR_VAR resource=~SPCL613#~ END
+  BUT_ONLY
+END
+
+//BG resists
+ACTION_IF (FILE_EXISTS ~override/QD_MCD07.SPL~) BEGIN
+  COPY_EXISTING ~QD_MCD15.SPL~  ~override~
+    LPF DELETE_EFFECT STR_VAR resource=~SPCL924#~ END
+  BUT_ONLY
+  COPY_EXISTING ~QD_MCD18.SPL~  ~override~
+    LPF DELETE_EFFECT STR_VAR resource=~SPCL925#~ END
+  BUT_ONLY
+  COPY_EXISTING ~QD_MCD21.SPL~  ~override~
+    LPF DELETE_EFFECT STR_VAR resource=~SPCL926#~ END
+  BUT_ONLY
+  COPY_EXISTING ~QD_MCD24.SPL~  ~override~
+    LPF DELETE_EFFECT STR_VAR resource=~SPCL927#~ END
+  BUT_ONLY
+END
+
+
+
+/*
+*/

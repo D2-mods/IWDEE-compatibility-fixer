@@ -1,12 +1,10 @@
 /*
 Give mod kits correct abilities for IWDEE
-- also checks multiclass kit tables, but this is just for appearances
-- multiclass kits use the base class table (and add abilities to QD_MC files)
 */
 
 
-//Check base classes (fix if abilities missing)
 INCLUDE ~%install%/iwdbaseclass.tph~
+INCLUDE ~%install%/iwdqdmulti.tph~
 
 
 //Make array of kitlist.2da
@@ -24,6 +22,7 @@ COPY_EXISTING - ~kitlist.2da~  ~~
         INNER_ACTION BEGIN
           ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
             COPY_EXISTING ~%clab%.2da~  ~override~
+              LPF 2DA_MISSING_COLS END
               COUNT_REGEXP_INSTANCES ~GA_SPCL211~   layonhands    // check IWD abilities
               COUNT_REGEXP_INSTANCES ~AP_#PALDISE~  paldise
               COUNT_REGEXP_INSTANCES ~AP_#PALFEAR~  palfear
@@ -72,12 +71,12 @@ COPY_EXISTING - ~kitlist.2da~  ~~
 //Ranger: Tracking
   FOR (r = 1; r < rows; ++r) BEGIN
     READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
-    PATCH_IF ((baseclass = 12) OR        // if Ranger
-              (baseclass = 18)) BEGIN    // if C/R
+    PATCH_IF (baseclass = 12) BEGIN        // if Ranger
       READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
       INNER_ACTION BEGIN
         ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
           COPY_EXISTING ~%clab%.2da~  ~override~
+            LPF 2DA_MISSING_COLS END
             COUNT_REGEXP_INSTANCES ~GA_SPCL922~  tracking
             PATCH_IF (tracking > 1) BEGIN
               REPLACE_TEXTUALLY ~GA_SPCL922~ ~****~
@@ -97,15 +96,12 @@ COPY_EXISTING - ~kitlist.2da~  ~~
 //Thief: Evasion
   FOR (r = 1; r < rows; ++r) BEGIN
     READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
-    PATCH_IF ((baseclass = 4) OR         // if Thief
-              (baseclass = 9) OR         // if F/T
-              (baseclass = 10) OR        // if F/M/T
-              (baseclass = 13) OR        // if M/T
-              (baseclass = 15)) BEGIN    // if C/T
+    PATCH_IF (baseclass = 4) BEGIN         // if Thief
       READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
       INNER_ACTION BEGIN
         ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
           COPY_EXISTING ~%clab%.2da~  ~override~
+            LPF 2DA_MISSING_COLS END
             COUNT_REGEXP_INSTANCES ~AP_#EVASION~  evasion
             PATCH_IF (evasion > 1) BEGIN
               REPLACE_TEXTUALLY ~AP_#EVASION~ ~****~
@@ -125,12 +121,12 @@ COPY_EXISTING - ~kitlist.2da~  ~~
 //Druid: poison immunity, timeless body, shapeshifts (if BG2 shapeshifts detected)
   FOR (r = 1; r < rows; ++r) BEGIN
     READ_2DA_ENTRY_FORMER ~kitlist_table~ r 8 baseclass
-    PATCH_IF ((baseclass = 11) OR        // if Druid
-              (baseclass = 16)) BEGIN    // if F/D
+    PATCH_IF (baseclass = 11) BEGIN        // if Druid
       READ_2DA_ENTRY_FORMER ~kitlist_table~ r 5 clab
       INNER_ACTION BEGIN
         ACTION_IF (FILE_EXISTS_IN_GAME ~%clab%.2da~) BEGIN
           COPY_EXISTING ~%clab%.2da~  ~override~
+            LPF 2DA_MISSING_COLS END
             COUNT_REGEXP_INSTANCES ~AP_SPCL939~  timeless
             COUNT_REGEXP_INSTANCES ~AP_SPCL925~  bg2resists
             COUNT_REGEXP_INSTANCES ~GA_SPCL611~  bg2shapeshifts

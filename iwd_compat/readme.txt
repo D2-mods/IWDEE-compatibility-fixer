@@ -53,3 +53,7 @@ Note: According to subtledoctor, the level discrepancies from the Innate Metamag
 
 - Can also be installed for the BGEE games. Will only adjust the level discrepancies.
 
+
+
+Notes:
+- Uses 2da_missing_cols by K4thos (https://github.com/K4thos/IE-code-repository)
