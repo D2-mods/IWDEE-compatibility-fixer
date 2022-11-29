@@ -7,7 +7,7 @@ I decided to do something about it (a long time ago, but only getting it done no
 
 Components:
 1. Kit mods
-2. TnB Innate Metamagic (tested with v0.9.42)
+2. Innate Metamagic (Tome & Blood)
 
 
 
@@ -57,3 +57,7 @@ Note: According to subtledoctor, the level discrepancies from the Innate Metamag
 
 Notes:
 - Uses 2DA_MISSING_COLS by K4thos (https://github.com/K4thos/IE-code-repository)
+
+v0.4
+- Fixed WeiDU error when installed after TnB Revised Specialists.
+- Will now check multiclass files (QD_MCD) for BG Druid abilities.

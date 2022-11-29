@@ -7,7 +7,7 @@ I decided to do something about it (a long time ago, but only getting it done no
 
 **Components:**
 1. Kit mods
-2. TnB Innate Metamagic (tested with v0.9.42)
+2. Innate Metamagic (Tome & Blood)
 
 ---
 
