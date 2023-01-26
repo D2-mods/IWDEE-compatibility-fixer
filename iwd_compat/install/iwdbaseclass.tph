@@ -32,7 +32,7 @@ COPY_EXISTING ~CLABPA01.2DA~  ~override~
     LPF d2_kit_ability_adder INT_VAR passive=1 STR_VAR resource=~#PALDISE~ END
   END
   PATCH_IF (palfear = 0) BEGIN
-    LPF d2_kit_ability_adder INT_VAR passive=1 STR_VAR resource=~#PALFEAR~ END
+    LPF d2_kit_ability_adder INT_VAR level=3 passive=1 STR_VAR resource=~#PALFEAR~ END
   END
   PATCH_IF (curedisease = 0) BEGIN
     PATCH_IF (layonhands > 0) BEGIN
