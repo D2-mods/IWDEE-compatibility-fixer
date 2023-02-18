@@ -1,6 +1,7 @@
 BACKUP ~weidu_external/backup/iwd_compat~
 AUTHOR ~~
 VERSION ~0.7~
+AUTO_EVAL_STRINGS
 
 ALWAYS
   ACTION_BASH_FOR ~%MOD_FOLDER%/lib~ ~.*\.tpa~ BEGIN    // function list
@@ -9,8 +10,6 @@ ALWAYS
 
   OUTER_TEXT_SPRINT install  ~%MOD_FOLDER%/install~
 END
-
-AUTO_EVAL_STRINGS
 
 LANGUAGE ~English~
          ~english~
