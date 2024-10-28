@@ -1,6 +1,6 @@
 BACKUP ~weidu_external/backup/iwd_compat~
 AUTHOR ~~
-VERSION ~0.7~
+VERSION ~0.8~
 AUTO_EVAL_STRINGS
 
 ALWAYS
@@ -16,9 +16,8 @@ LANGUAGE ~English~
          ~iwd_compat/tra/english/setup.tra~
 
 
-/*
-Compatibility fixes for mod kits (IWDEE)
-*/
+//
+//Compat fixes for mod kits (IWDEE)
 
 BEGIN @10
 DESIGNATED 10
@@ -28,8 +27,8 @@ INCLUDE ~%install%/iwdkitcompat.tph~
 
 
 /*
-IWDEE compatibility for TnB Innate Metamagic (tested on v0.9.42)
-*/
+//
+//Fix/Tweak for TnB Innate Metamagic
 
 BEGIN @20
 DESIGNATED 20
@@ -38,7 +37,7 @@ REQUIRE_PREDICATE ((MOD_IS_INSTALLED ~TomeAndBlood.tp2~ 51) OR
                    (MOD_IS_INSTALLED ~TomeAndBlood.tp2~ 52)) ~~
 LABEL ~D2-IWDEE-TNBSEQFIX~
 INCLUDE ~%install%/tnbseqfix.tph~
-
+*/
 
 
 ////////////////////////////////////////////////////////////

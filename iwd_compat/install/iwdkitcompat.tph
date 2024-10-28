@@ -1,5 +1,5 @@
 /*
-Give mod kits correct abilities for IWDEE
+Check kit abilities for IWDEE
 */
 
 
@@ -7,6 +7,28 @@ INCLUDE ~%install%/iwdbaseclass.tph~
 INCLUDE ~%install%/iwdqdmulti.tph~
 
 
+//
+//check naming conflict issue (Artisan paladin revision)
+COPY_EXISTING - ~clabpa01.2da~  ~override~
+  COUNT_REGEXP_INSTANCES ~GA_SPCL213~  bg2protect
+  COUNT_REGEXP_INSTANCES ~GA_SPCL212~  bg2detect
+  COUNT_REGEXP_INSTANCES ~GA_SPCL109~  iwddetect
+
+OUTER_TEXT_SPRINT palmode ~iwd~
+ACTION_IF (bg2protect>0 AND iwddetect=0) BEGIN
+  OUTER_TEXT_SPRINT palmode ~artisan~
+END
+ACTION_IF (bg2protect>5 AND bg2detect>5) BEGIN
+  OUTER_TEXT_SPRINT palmode ~bg2~
+END
+
+/*more info
+IWD Protection From Evil and BG Detect Evil use the same resource name
+This installer detects paladin effects (IWD, BG2, or Artisan), and set effects accordingly
+*/
+
+
+//
 //Make array of kitlist.2da
 COPY_EXISTING - ~kitlist.2da~  ~~
   COUNT_2DA_ROWS 10 rows
@@ -27,6 +49,7 @@ COPY_EXISTING - ~kitlist.2da~  ~~
               COUNT_REGEXP_INSTANCES ~AP_#PALDISE~  paldise
               COUNT_REGEXP_INSTANCES ~AP_#PALFEAR~  palfear
               COUNT_REGEXP_INSTANCES ~GA_SPCL111~   curedisease
+              COUNT_REGEXP_INSTANCES ~GA_C0PAL05~   artisancd
 
               PATCH_IF (paldise = 0) BEGIN
                 LPF d2_kit_ability_adder INT_VAR passive=1 STR_VAR resource=~#PALDISE~ END
@@ -34,30 +57,63 @@ COPY_EXISTING - ~kitlist.2da~  ~~
               PATCH_IF (palfear = 0) BEGIN
                 LPF d2_kit_ability_adder INT_VAR level=3 passive=1 STR_VAR resource=~#PALFEAR~ END
               END
-              PATCH_IF (curedisease = 0) BEGIN
+              PATCH_IF (curedisease=0 AND artisancd=0) BEGIN
                 PATCH_IF (layonhands > 0) BEGIN
                   LPF d2_kit_ability_adder STR_VAR resource=~SPCL111~ END
                 END
               END
 
-              // check Detect/Protect from Evil, but skip if Paladin Overhaul (Artisan's Kitpack)
-              PATCH_IF !(FILE_EXISTS ~override/c0pal01.SPL~) BEGIN
-                COUNT_REGEXP_INSTANCES ~GA_SPCL213~  bg2protect
-                COUNT_REGEXP_INSTANCES ~GA_SPCL212~  bg2detect
-                PATCH_IF (bg2protect > 1) BEGIN
-                  REPLACE_TEXTUALLY ~GA_SPCL213~ ~****~
+              // iwd detect/protect from evil
+              PATCH_IF (RESOURCE_CONTAINS ~%clab%.2da~  ~GA_SPCL212~) BEGIN
+                PATCH_IF (~%palmode%~ STR_EQ ~iwd~) BEGIN
+                  COUNT_REGEXP_INSTANCES ~GA_SPCL213~  bg2protect
+                  COUNT_REGEXP_INSTANCES ~GA_SPCL212~  bg2detect
+                  PATCH_IF (bg2protect > 1) BEGIN  REPLACE_TEXTUALLY ~GA_SPCL213~ ~****~  END
+                  PATCH_IF (bg2detect > 1) BEGIN  REPLACE_TEXTUALLY ~GA_SPCL212~ ~****~  END
+  
+                  COUNT_REGEXP_INSTANCES ~GA_SPCL212~   iwdprotect
+                  COUNT_REGEXP_INSTANCES ~GA_SPCL109~   iwddetect
+                  PATCH_IF (iwdprotect = 0) BEGIN
+                    LPF d2_kit_ability_adder STR_VAR resource=~SPCL212~ END
+                  END
+                  PATCH_IF (iwddetect = 0) BEGIN
+                    LPF d2_kit_ability_adder STR_VAR resource=~SPCL109~ END
+                  END
                 END
-                PATCH_IF (bg2detect > 1) BEGIN
-                  REPLACE_TEXTUALLY ~GA_SPCL212~ ~****~
+  
+                // bg2 detect/protect from evil
+                PATCH_IF (~%palmode%~ STR_EQ ~bg2~) BEGIN
+                  COUNT_REGEXP_INSTANCES ~GA_SPCL213~  bg2protect
+                  COUNT_REGEXP_INSTANCES ~GA_SPCL212~  bg2detect
+                  REPLACE_TEXTUALLY ~GA_SPCL109~ ~****~
+                  PATCH_IF (bg2protect < 5) BEGIN  REPLACE_TEXTUALLY ~GA_SPCL213~ ~****~  END
+                  PATCH_IF (bg2detect < 5) BEGIN  REPLACE_TEXTUALLY ~GA_SPCL212~ ~****~  END
+  
+                  PATCH_IF (bg2protect = 0) BEGIN
+                    LPF d2_kit_ability_adder INT_VAR multi=1 increment=1 STR_VAR resource=~SPCL213~ END
+                  END
+                  PATCH_IF (bg2detect = 0) BEGIN
+                    LPF d2_kit_ability_adder INT_VAR multi=1 increment=1 STR_VAR resource=~SPCL212~ END
+                    LPF d2_kit_ability_adder STR_VAR resource=~SPCL212~ END
+                    LPF d2_kit_ability_adder STR_VAR resource=~SPCL212~ END
+                    LPF d2_kit_ability_adder STR_VAR resource=~SPCL212~ END    // 4 uses at level 1
+                  END
                 END
-
-                COUNT_REGEXP_INSTANCES ~GA_SPCL212~   iwdprotect
-                COUNT_REGEXP_INSTANCES ~GA_SPCL109~   iwddetect
-                PATCH_IF (iwdprotect = 0) BEGIN
-                  LPF d2_kit_ability_adder STR_VAR resource=~SPCL212~ END
-                END
-                PATCH_IF (iwddetect = 0) BEGIN
-                  LPF d2_kit_ability_adder STR_VAR resource=~SPCL109~ END
+  
+                // artisan's detect/protect from evil
+                PATCH_IF (~%palmode%~ STR_EQ ~artisan~) BEGIN
+                  COUNT_REGEXP_INSTANCES ~GA_SPCL213~  bg2protect
+                  COUNT_REGEXP_INSTANCES ~GA_SPCL212~  bg2detect
+                  REPLACE_TEXTUALLY ~GA_SPCL109~ ~****~
+                  PATCH_IF (bg2protect < 5) BEGIN  REPLACE_TEXTUALLY ~GA_SPCL213~ ~****~  END
+                  PATCH_IF (bg2detect > 1) BEGIN  REPLACE_TEXTUALLY ~GA_SPCL212~ ~****~  END
+  
+                  PATCH_IF (bg2protect = 0) BEGIN
+                    LPF d2_kit_ability_adder INT_VAR multi=1 increment=1 STR_VAR resource=~SPCL213~ END
+                  END
+                  PATCH_IF (bg2detect = 0) BEGIN
+                    LPF d2_kit_ability_adder STR_VAR resource=~SPCL212~ END
+                  END
                 END
               END
             BUT_ONLY
@@ -172,7 +228,6 @@ COPY_EXISTING - ~kitlist.2da~  ~~
       END
     END
   END
-
 
 
 /*

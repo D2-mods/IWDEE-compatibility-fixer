@@ -5,41 +5,24 @@ Check base classes (fix if abilities missing)
 
 //Paladin
 COPY_EXISTING ~CLABPA01.2DA~  ~override~
-  COUNT_REGEXP_INSTANCES ~GA_SPCL213~  bg2protect   // check BG2 abilities
-  COUNT_REGEXP_INSTANCES ~GA_SPCL212~  bg2detect
-
-  PATCH_IF (bg2protect > 1) BEGIN
-    REPLACE_TEXTUALLY ~GA_SPCL213~ ~****~
-  END
-  PATCH_IF (bg2detect > 1) BEGIN
-    REPLACE_TEXTUALLY ~GA_SPCL212~ ~****~
-  END
-
-  COUNT_REGEXP_INSTANCES ~GA_SPCL211~   layonhands  // check IWD abilities
-  COUNT_REGEXP_INSTANCES ~GA_SPCL212~   iwdprotect
-  COUNT_REGEXP_INSTANCES ~GA_SPCL109~   iwddetect
+  COUNT_REGEXP_INSTANCES ~GA_SPCL211~   layonhands    // check IWD abilities
   COUNT_REGEXP_INSTANCES ~AP_#PALDISE~  paldise
   COUNT_REGEXP_INSTANCES ~AP_#PALFEAR~  palfear
   COUNT_REGEXP_INSTANCES ~GA_SPCL111~   curedisease
+  COUNT_REGEXP_INSTANCES ~GA_C0PAL05~   artisancd
 
-  PATCH_IF (iwdprotect = 0) BEGIN
-    LPF d2_kit_ability_adder STR_VAR resource=~SPCL212~ END
-  END
-  PATCH_IF (iwddetect = 0) BEGIN
-    LPF d2_kit_ability_adder STR_VAR resource=~SPCL109~ END
-  END
   PATCH_IF (paldise = 0) BEGIN
     LPF d2_kit_ability_adder INT_VAR passive=1 STR_VAR resource=~#PALDISE~ END
   END
   PATCH_IF (palfear = 0) BEGIN
     LPF d2_kit_ability_adder INT_VAR level=3 passive=1 STR_VAR resource=~#PALFEAR~ END
   END
-  PATCH_IF (curedisease = 0) BEGIN
+  PATCH_IF (curedisease=0 AND artisancd=0) BEGIN
     PATCH_IF (layonhands > 0) BEGIN
       LPF d2_kit_ability_adder STR_VAR resource=~SPCL111~ END
     END
   END
-BUT_ONLY UNLESS ~AP_C0PAL01~    // not if revised Paladin (Artisan's Kitpack)
+BUT_ONLY
 
 
 //Ranger: Tracking
@@ -110,7 +93,6 @@ COPY_EXISTING ~CLABDR01.2DA~  ~override~
     LPF d2_kit_ability_adder INT_VAR level=15 STR_VAR resource=~SPCL114~ END
   END
 BUT_ONLY
-
 
 
 /*
